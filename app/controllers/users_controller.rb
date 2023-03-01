@@ -8,18 +8,29 @@ class UsersController < ApplicationController
   end
 
   def index
+    @user = current_user
     @users = User.all
     @book = Book.new
   end
 
   def edit
+    @user = User.find(params[:id])
+      #ログインユーザーと編集しようとしているユーザーが一致するか。一致しなければindexへ転送
+      if @user == current_user
+
+      else
+        redirect_to user_path(current_user)
+      end
+
   end
 
   def update
+    @books = @user.books
+    @user = current_user
     if @user.update(user_params)
-      redirect_to users_path(@user), notice: "You have updated user successfully."
+      redirect_to user_path(@user.id), notice: "You have updated user successfully."
     else
-      render "show"
+      render :edit
     end
   end
 
