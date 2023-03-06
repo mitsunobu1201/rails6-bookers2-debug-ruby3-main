@@ -9,11 +9,18 @@ class BookCommentsController < ApplicationController
   end
 
   def destroy
-
+    @comment = Book.find(params[:book_id])
+    comment = @comment.book_comments.find(params[:id])
+    if current_user.id == comment.user.id
+    comment.destroy
+    redirect_back(fallback_location: root_path)
+    else
+      render "books/show"
+    end
   end
 
   def book_comment_params
-      params.require(:book_comment).permit(:book_comment)
+      params.require(:book_comment).permit(:comment)
   end
 
 
